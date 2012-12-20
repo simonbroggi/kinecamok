@@ -1,0 +1,11 @@
+ofxOpenCv
+ofxCv
+ofxAssimpModelLoader
+ofxProCamToolkit
+ofxControlPanel
+ofxXmlSettings
+ofxDirList
+ofxThread
+ofxNetwork
+
+

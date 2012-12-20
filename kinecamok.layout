@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="src/faceReceiver.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1372" topLine="8" />
+	</File>
+	<File name="src/faceReceiver.h" open="1" top="0" tabpos="4">
+		<Cursor position="233" topLine="0" />
+	</File>
+	<File name="src/main.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="354" topLine="0" />
+	</File>
+	<File name="src/testApp.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="2803" topLine="151" />
+	</File>
+	<File name="src/testApp.h" open="1" top="0" tabpos="2">
+		<Cursor position="1102" topLine="21" />
+	</File>
+</CodeBlocks_layout_file>
