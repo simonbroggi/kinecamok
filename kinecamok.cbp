@@ -45,6 +45,12 @@
 		<Unit filename="src/faceReceiver.h">
 			<Option virtualFolder="src/" />
 		</Unit>
+		<Unit filename="src/soundsynt.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/soundsynt.h">
+			<Option virtualFolder="src/" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

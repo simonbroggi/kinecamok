@@ -29,16 +29,26 @@ void testApp::setup() {
 	setupMesh();
 	setupControlPanel();
 	fReceiver = new faceReceiver();
+
+	synt = new soundsynt(this);
+
 	myPlayer.loadMovie("schnauzMovie.avi"); //Loads video resources
 	myPlayer.setLoopState(OF_LOOP_NORMAL);
 	myPlayer.play();
     //myPlayer.closeMovie(); //Unloads video resources
+
 }
 
 void testApp::update() {
-
     fReceiver->update( objectMesh.getVertices() );
-
+/*
+    if(fReceiver->update( objectMesh.getVertices() ) ){
+        synt->volume = 0.1;
+    }
+    else{
+        synt->volume = 0.0;
+    }
+*/
 	ofSetWindowTitle("mapamok");
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
@@ -609,7 +619,7 @@ void testApp::constructMesh() {
 
 }
 void testApp::setupMesh() {
-    texture.loadImage("uvText.png");
+    texture.loadImage("faltenTest.png");
     constructMesh();
     /*
 	model.loadModel("KinectFace.obj", false);
@@ -632,6 +642,22 @@ void testApp::setupMesh() {
 
 }
 
+void testApp::updateTrackingAge(){
+    howStrong = 1.0;
+    float ttiv = getf("timeTrackingIsValid");
+    if(ttiv > 0.0){
+        float trackingAge = ofGetElapsedTimef() - fReceiver->lastFaceReceivedTime;
+        if(trackingAge > ttiv){
+            //cout<<"not rendering"<<endl;
+            //return;
+            howStrong = 0.0;
+        }
+        else if(trackingAge > 0.0) howStrong = ttiv / trackingAge;
+    }
+    synt->volume = howStrong / 10.0;
+}
+
+//not doing this if in render mode and calibration not ready jet!
 void testApp::render() {
 	ofPushStyle();
 	ofSetLineWidth(geti("lineWidth"));
@@ -654,6 +680,9 @@ void testApp::render() {
 	ofSetColor(255);
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glEnable(GL_DEPTH_TEST);
+
+	updateTrackingAge();
+
 	if(useShader) {
 		ofFile fragFile("shader.frag"), vertFile("shader.vert");
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
@@ -667,20 +696,21 @@ void testApp::render() {
 
 		shader.begin();
 		shader.setUniform1f("elapsedTime", ofGetElapsedTimef());
+		shader.setUniform1f("howStrong", howStrong);//todo
 		shader.end();
 	}
 	ofColor transparentBlack(0, 0, 0, 0);
 	switch(geti("drawMode")) {
 		case 0: // faces
-            //texture.bind();
-            myPlayer.getTextureReference().bind();
+            texture.bind();
+            //myPlayer.getTextureReference().bind();
 			if(useShader) shader.begin();
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 			objectMesh.drawFaces();
 			if(useShader) shader.end();
-			myPlayer.getTextureReference().unbind();
-			//texture.unbind();
+			//myPlayer.getTextureReference().unbind();
+			texture.unbind();
 			break;
 		case 1: // fullWireframe
 			if(useShader) shader.begin();
@@ -942,13 +972,7 @@ void testApp::drawSelectionMode() {
 }
 
 void testApp::drawRenderMode() {
-    float ttiv = getf("timeTrackingIsValid");
-    if(ttiv > 0.0){
-        if(ofGetElapsedTimef() - fReceiver->lastFaceReceivedTime > ttiv){
-            //cout<<"not rendering"<<endl;
-            return;
-        }
-    }
+    // got the howstrong part from here
 
 	glPushMatrix();
 
@@ -963,6 +987,9 @@ void testApp::drawRenderMode() {
 		if(getb("setupMode")) {
 			imageMesh = getProjectedMesh(objectMesh);
 		}
+	}
+	else{
+        updateTrackingAge();
 	}
 
 	glPopMatrix();
@@ -996,4 +1023,34 @@ void testApp::drawRenderMode() {
             ofRect(toOf(cur), 1, 1);//black dot in the center
 		}
 	}
+}
+
+//--------------------------------------------------------------
+void testApp::audioOut(float * output, int bufferSize, int nChannels){
+	//pan = 0.5f;
+	float leftScale = 1 - synt->pan;
+	float rightScale = synt->pan;
+
+	// sin (n) seems to have trouble when n is very large, so we
+	// keep phase in the range of 0-TWO_PI like this:
+	while (synt->phase > TWO_PI){
+		synt->phase -= TWO_PI;
+	}
+
+	if ( synt->bNoise == true){
+		// ---------------------- noise --------------
+		for (int i = 0; i < bufferSize; i++){
+			output[i*nChannels    ] = ofRandom(0, 1) * synt->volume * leftScale;
+			output[i*nChannels + 1] = ofRandom(0, 1) * synt->volume * rightScale;
+		}
+	} else {
+		synt->phaseAdder = 0.95f * synt->phaseAdder + 0.05f * synt->phaseAdderTarget;
+		for (int i = 0; i < bufferSize; i++){
+			synt->phase += synt->phaseAdder;
+			float sample = sin(synt->phase);
+			output[i*nChannels    ] = sample * synt->volume * leftScale;
+			output[i*nChannels + 1] = sample * synt->volume * rightScale;
+		}
+	}
+
 }

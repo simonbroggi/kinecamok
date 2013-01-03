@@ -23,6 +23,7 @@ void soundsynt::setup(ofBaseApp *app){
 	phaseAdderTarget 	= 0.0f;
 	volume				= 0.1f;
 	bNoise 				= false;
+	pan                 = 0.5;
 
 
 	//soundStream.listDevices();

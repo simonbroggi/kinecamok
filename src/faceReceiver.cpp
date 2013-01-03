@@ -29,8 +29,20 @@ faceReceiver::~faceReceiver(){
 void faceReceiver::closeConnection(){
     udpConnection.Close();
 }
-
-void faceReceiver::update(vector<ofVec3f>& verts){
+/*
+bool faceReceiver::update(vector<ofVec3f>& verts){
+    char udpMessage[1024];
+    //cout<<"receive"<<endl;
+    udpConnection.Receive(udpMessage, 1024);
+    string tmpMessage=udpMessage;
+    if(tmpMessage!=""){
+        //cout<<tmpMessage<<endl;
+        return true;
+    }
+    return false;
+}
+*/
+bool faceReceiver::update(vector<ofVec3f>& verts){
     int inArrayLen = 1468;
     //udpConnection.SetReceiveBufferSize(inArrayLen); //what's the point?
     char udpMessage[inArrayLen];
@@ -50,6 +62,7 @@ void faceReceiver::update(vector<ofVec3f>& verts){
 
         unsigned long tick = CHAR2UINT64(udpMessage,0);
         unsigned short numFaces = CHAR2UINT16(udpMessage,8);
+
 
         int faceHeaderIndex = header; //since only one face is supported this is easy
 
@@ -83,6 +96,8 @@ void faceReceiver::update(vector<ofVec3f>& verts){
         }
 
         lastFaceReceivedTime = ofGetElapsedTimef();
-
+        return true;
     }
+    return false;
 }
+

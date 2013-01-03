@@ -5,7 +5,7 @@ class faceReceiver{
     public:
         faceReceiver();
         ~faceReceiver();
-        void update( vector<ofVec3f>& );
+        bool update( vector<ofVec3f>& );
         void closeConnection();
         float lastFaceReceivedTime;
 

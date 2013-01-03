@@ -8,6 +8,7 @@
 #include "LineArt.h"
 
 #include "faceReceiver.h"
+#include "soundsynt.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -26,6 +27,9 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
+	soundsynt *synt;
+	void audioOut(float * input, int bufferSize, int nChannels);
+
 	void setupControlPanel();
 	void setupMesh();
 	void constructMesh();
@@ -36,6 +40,8 @@ public:
 	void render();
 	void saveCalibration();
 	void preSwitchToRenderMode();
+
+	void updateTrackingAge();
 
 	ofxAssimpModelLoader model;
 	ofEasyCam cam;
@@ -63,4 +69,5 @@ public:
 
 	Poco::Timestamp lastFragTimestamp, lastVertTimestamp;
 	ofShader shader;
+	float howStrong;//shader attribute
 };
