@@ -42,6 +42,7 @@ public:
 	void preSwitchToRenderMode();
 
 	void updateTrackingAge();
+	void toggleSelectionMode();
 
 	ofxAssimpModelLoader model;
 	ofEasyCam cam;

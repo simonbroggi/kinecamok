@@ -1,5 +1,11 @@
 #include "testApp.h"
 
+//middle mouse to switch doesnt break other mouse interaction
+
+#define MOUSE_SELECT_BUTTON 0
+#define MOUSE_SWITCH_BUTTON 1
+
+
 using namespace ofxCv;
 using namespace cv;
 
@@ -133,15 +139,19 @@ void testApp::keyPressed(int key) {
 	    }
 	}
 	if(key == ' ') { // toggle render/select mode
-	    if(getb("selectionMode")){
-	        preSwitchToRenderMode();
-            setb("selectionMode", false);
-	    }
-	    else{
-            setb("selectionMode", true);
-	    }
+        toggleSelectionMode();
 	}
 
+}
+
+void testApp::toggleSelectionMode(){
+    if(getb("selectionMode")){
+        preSwitchToRenderMode();
+        setb("selectionMode", false);
+    }
+    else{
+        setb("selectionMode", true);
+    }
 }
 
 void testApp::preSwitchToRenderMode(){
@@ -153,9 +163,19 @@ void testApp::preSwitchToRenderMode(){
 
 void testApp::mousePressed(int x, int y, int button) {
 	if(getb("selectionMode")){
-	    setb("selected", getb("hoverSelected"));
-	    seti("selectionChoice", geti("hoverChoice"));
+        if(button == MOUSE_SELECT_BUTTON){
+            setb("selected", getb("hoverSelected"));
+            seti("selectionChoice", geti("hoverChoice"));
+        }
 	}
+
+    if(button == MOUSE_SWITCH_BUTTON){
+
+        cout<<" -!toggled selectionMode!- ";
+        toggleSelectionMode();
+    }
+
+
 }
 
 void testApp::mouseReleased(int x, int y, int button) {
@@ -954,7 +974,7 @@ void testApp::drawSelectionMode() {
 		int choice;
 		float distance;
 		ofVec3f selected = getClosestPointOnMesh(imageMesh, mouseX, mouseY, &choice, &distance);
-		if(!ofGetMousePressed() && distance < getf("selectionRadius")) {
+		if(!ofGetMousePressed(MOUSE_SELECT_BUTTON) && distance < getf("selectionRadius")) {
 			seti("hoverChoice", choice);
 			setb("hoverSelected", true);
 			drawLabeledPoint(choice, selected, magentaPrint);
