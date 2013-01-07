@@ -2,7 +2,7 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="src/faceReceiver.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="1868" topLine="41" />
+		<Cursor position="1868" topLine="0" />
 	</File>
 	<File name="src/faceReceiver.h" open="1" top="0" tabpos="4">
 		<Cursor position="233" topLine="0" />
@@ -17,9 +17,9 @@
 		<Cursor position="179" topLine="0" />
 	</File>
 	<File name="src/testApp.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="44311" topLine="629" />
+		<Cursor position="34806" topLine="246" />
 	</File>
 	<File name="src/testApp.h" open="1" top="0" tabpos="2">
-		<Cursor position="1064" topLine="30" />
+		<Cursor position="915" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

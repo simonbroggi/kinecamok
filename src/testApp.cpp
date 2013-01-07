@@ -79,7 +79,8 @@ void testApp::exit(){
 }
 
 void testApp::draw() {
-	ofBackground(geti("backgroundColor"));
+	//ofBackground(geti("backgroundColor"));
+	ofBackground(geti("backgroundColorR"), geti("backgroundColorG"), geti("backgroundColorB"));
 
 	if(getb("saveCalibration")) {
 		saveCalibration();
@@ -90,6 +91,11 @@ void testApp::draw() {
 	} else {
 		drawRenderMode();
 	}
+	if(getb("multiplyGradient")) {
+        multiplyLightConeFalloff();
+	}
+
+
 	if(!getb("validShader")) {
 		ofPushStyle();
 		ofSetColor(magentaPrint);
@@ -129,7 +135,6 @@ void testApp::keyPressed(int key) {
             seti("selectionChoice", 5);
             setb("selected", true);
 	    }
-
 	}
 	if(key == 'e') {
         if(getb("selectionMode")){
@@ -773,6 +778,7 @@ void testApp::render() {
 		ofDisableLighting();
 	}
 	ofPopStyle();
+
 }
 
 void testApp::saveCalibration() {
@@ -846,13 +852,19 @@ void testApp::saveCalibration() {
 }
 
 void testApp::setupControlPanel() {
-	panel.setup();
-	panel.msg = "tab hides the panel, space toggles render/selection mode, 'f' toggles fullscreen.";
+	panel.setup(300, 700);
+	panel.msg = "tab hides the panel, space or middle mouse toggles render/selection mode, 'f' toggles fullscreen.";
 
 	panel.addPanel("Interaction");
 	panel.addToggle("setupMode", true);
 	panel.addSlider("scale", 10, .1, 25);
-	panel.addSlider("backgroundColor", 0, 0, 255, true);
+	//panel.addSlider("backgroundColor", 128, 0, 255, true);
+	panel.addSlider("backgroundColorR", 110, 0, 255, true);
+	panel.addSlider("backgroundColorG", 85, 0, 255, true);
+	panel.addSlider("backgroundColorB", 75, 0, 255, true);
+	panel.addSlider("gradientScaleX", 1, .1, 2);
+	panel.addSlider("gradientScaleY", 1, .1, 2);
+	panel.addToggle("multiplyGradient", false);
 	panel.addMultiToggle("drawMode", 5, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe")("pointCloud")("noseOnly"));
 	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
 	panel.addSlider("timeTrackingIsValid" ,0, 0, 0.2);//if last tracking is to old nothing is rendered in render mode. if set to 0 it-s allways rendered.
@@ -989,11 +1001,26 @@ void testApp::drawSelectionMode() {
 			drawLabeledPoint(choice, selected, yellowPrint, ofColor::white, ofColor::black);
 		}
 	}
+
+}
+
+void testApp::multiplyLightConeFalloff(){
+    ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    //ofBackground(ofColor::black);
+    ofPushMatrix();
+    //float scale = getf("gradientScale");
+    float halfW = ofGetWidth()/2.0;
+    float halfH = ofGetHeight()/2.0;
+    ofTranslate(halfW, halfH, 0);
+    ofScale(getf("gradientScaleX"), getf("gradientScaleY"), 1);
+    ofTranslate(-halfW, -halfH, 0);
+
+    ofBackgroundGradient(ofColor::white,ofColor::black, OF_GRADIENT_CIRCULAR);
+    ofPopMatrix();
+    ofDisableBlendMode();
 }
 
 void testApp::drawRenderMode() {
-    // got the howstrong part from here
-
 	glPushMatrix();
 
 	glMatrixMode(GL_PROJECTION);
@@ -1016,6 +1043,8 @@ void testApp::drawRenderMode() {
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
+
+
 
 	if(getb("setupMode")) {
 

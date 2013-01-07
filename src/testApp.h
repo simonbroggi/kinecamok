@@ -11,6 +11,7 @@
 #include "soundsynt.h"
 
 class testApp : public ofBaseApp {
+
 public:
 	void setb(string name, bool value);
 	void seti(string name, int value);
@@ -38,6 +39,7 @@ public:
 	void drawSelectionMode();
 	void drawRenderMode();
 	void render();
+	void multiplyLightConeFalloff();
 	void saveCalibration();
 	void preSwitchToRenderMode();
 
