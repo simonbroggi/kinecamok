@@ -53,6 +53,7 @@ void testApp::loadNewMovie(){
     }*/
     cout<<"setting new current movie number "<<endl;
     currentMovie = (currentMovie+1) % 2;
+    //currentMovie = ofRandom(2); //load random movie
     cout<<"loading movie "<<currentMovie<<endl;
     switch(currentMovie){
         case 0:
