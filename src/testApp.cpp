@@ -38,23 +38,63 @@ void testApp::setup() {
 
 	synt = new soundsynt(this);
 
-	myPlayer.loadMovie("schnauzMovie.avi"); //Loads video resources
-	myPlayer.setLoopState(OF_LOOP_NORMAL);
-	myPlayer.play();
+	currentMovie = 0;
+
+    loadNewMovie();
+
     //myPlayer.closeMovie(); //Unloads video resources
 
 }
 
+void testApp::loadNewMovie(){
+    /*if( myPlayer.isLoaded() ){
+        cout<<"closing movie "<<currentMovie<<endl;
+        myPlayer.closeMovie();
+    }*/
+    cout<<"setting new current movie number "<<endl;
+    currentMovie = (currentMovie+1) % 2;
+    cout<<"loading movie "<<currentMovie<<endl;
+    switch(currentMovie){
+        case 0:
+            myPlayer.loadMovie("schnauz1.avi");
+            break;
+        case 1:
+            myPlayer.loadMovie("schnauz2.avi");
+            break;
+        default:
+            cout<<"strange, but loading schnauz1"<<endl;
+            myPlayer.loadMovie("schnauz1.avi");
+    }
+    cout<<"loaded "<<endl;
+
+	//myPlayer.loadMovie("schnauz1.avi"); //Loads video resources
+	myPlayer.setLoopState(OF_LOOP_NONE);
+    myPlayer.play();
+    cout<<"now playing "<<endl;
+    //myPlayer.stop();
+    myPlayer.setPaused(true);
+    myPlayer.firstFrame();
+}
+
 void testApp::update() {
-    fReceiver->update( objectMesh.getVertices() );
-/*
-    if(fReceiver->update( objectMesh.getVertices() ) ){
-        synt->volume = 0.1;
+    if ( fReceiver->update( objectMesh.getVertices() ) ){
+        //if ( myPlayer.isLoaded() && !myPlayer.isPlaying() ){
+        if ( myPlayer.isLoaded() && myPlayer.isPaused() ){
+            //myPlayer.play();
+            myPlayer.setPaused(false);
+        }
     }
     else{
-        synt->volume = 0.0;
+        //if ( myPlayer.isPlaying() ){
+        if ( !myPlayer.isPaused() ){
+            float trackingAge = ofGetElapsedTimef() - fReceiver->lastFaceReceivedTime;
+            if ( trackingAge > 2.0 ){ //if movie is playing and no tracking for 2 secs stop the movie and choose a new one
+
+                loadNewMovie();
+            }
+        }
     }
-*/
+
 	ofSetWindowTitle("mapamok");
 	if(getb("randomLighting")) {
 		setf("lightX", ofSignedNoise(ofGetElapsedTimef(), 1, 1) * 1000);
@@ -644,7 +684,7 @@ void testApp::constructMesh() {
 
 }
 void testApp::setupMesh() {
-    texture.loadImage("faltenTest.png");
+    //texture.loadImage("faltenTest.png");
     constructMesh();
     /*
 	model.loadModel("KinectFace.obj", false);
@@ -706,8 +746,6 @@ void testApp::render() {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glEnable(GL_DEPTH_TEST);
 
-	updateTrackingAge();
-
 	if(useShader) {
 		ofFile fragFile("shader.frag"), vertFile("shader.vert");
 		Poco::Timestamp fragTimestamp = fragFile.getPocoFile().getLastModified();
@@ -727,15 +765,15 @@ void testApp::render() {
 	ofColor transparentBlack(0, 0, 0, 0);
 	switch(geti("drawMode")) {
 		case 0: // faces
-            texture.bind();
-            //myPlayer.getTextureReference().bind();
+            //texture.bind();
+            myPlayer.getTextureReference().bind();
 			if(useShader) shader.begin();
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 			objectMesh.drawFaces();
 			if(useShader) shader.end();
-			//myPlayer.getTextureReference().unbind();
-			texture.unbind();
+			myPlayer.getTextureReference().unbind();
+			//texture.unbind();
 			break;
 		case 1: // fullWireframe
 			if(useShader) shader.begin();
@@ -1035,9 +1073,6 @@ void testApp::drawRenderMode() {
 			imageMesh = getProjectedMesh(objectMesh);
 		}
 	}
-	else{
-        updateTrackingAge();
-	}
 
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
@@ -1076,6 +1111,9 @@ void testApp::drawRenderMode() {
 
 //--------------------------------------------------------------
 void testApp::audioOut(float * output, int bufferSize, int nChannels){
+
+    updateTrackingAge();
+
 	//pan = 0.5f;
 	float leftScale = 1 - synt->pan;
 	float rightScale = synt->pan;

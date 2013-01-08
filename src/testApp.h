@@ -34,6 +34,10 @@ public:
 	void setupControlPanel();
 	void setupMesh();
 	void constructMesh();
+
+	int currentMovie;
+	void loadNewMovie();
+
 	void drawLabeledPoint(int label, ofVec2f position, ofColor color, ofColor bg = ofColor::black, ofColor fg = ofColor::white);
 	void updateRenderMode();
 	void drawSelectionMode();
@@ -50,7 +54,7 @@ public:
 	ofEasyCam cam;
 
 	ofVboMesh objectMesh; // the model.dae mesh
-	ofImage texture;
+	//ofImage texture;
 	ofVideoPlayer myPlayer;
 
 	faceReceiver *fReceiver;

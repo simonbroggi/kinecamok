@@ -19,7 +19,7 @@ faceReceiver::faceReceiver(){
 	udpConnection.Bind(11001);
 	udpConnection.SetNonBlocking(true);
 
-    lastFaceReceivedTime = ofGetElapsedTimef();
+    lastFaceReceivedTime = - 100000;
 }
 
 faceReceiver::~faceReceiver(){
@@ -45,7 +45,7 @@ bool faceReceiver::update(vector<ofVec3f>& verts){
 bool faceReceiver::update(vector<ofVec3f>& verts){
     int inArrayLen = 1468;
     //udpConnection.SetReceiveBufferSize(inArrayLen); //what's the point?
-    char udpMessage[inArrayLen];
+    char udpMessage[inArrayLen]; //probably this causes an error sometimes...
     udpConnection.Receive(udpMessage,inArrayLen);
 
     string tmpMessage=udpMessage;
