@@ -32,12 +32,20 @@ void testApp::setup() {
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
 	ofSetVerticalSync(true);
 	calibrationReady = false;
+
+	cout<<"going to sett up mesh"<<endl;
 	setupMesh();
+	cout<<"setting up mesh done"<<endl;
+
 	setupControlPanel();
+
+	cout<<"goan init face reciever"<<endl;
 	fReceiver = new faceReceiver();
+	cout<<"face receiver init done"<<endl;
 
-	synt = new soundsynt(this);
-
+    cout<<"gona setup soundsynth"<<endl;
+	//synt = new soundsynt(this);
+    cout<<"setting up soundsynth done"<<endl;
 	currentMovie = 0;
 
     loadNewMovie();
@@ -76,6 +84,7 @@ void testApp::loadNewMovie(){
     myPlayer.setPaused(true);
     myPlayer.firstFrame();
 }
+
 
 void testApp::update() {
     if ( fReceiver->update( objectMesh.getVertices() ) ){
@@ -720,7 +729,7 @@ void testApp::updateTrackingAge(){
         }
         else if(trackingAge > 0.0) howStrong = ttiv / trackingAge;
     }
-    synt->volume = howStrong / 10.0;
+    //synt->volume = howStrong / 10.0;
 }
 
 //not doing this if in render mode and calibration not ready jet!
@@ -1111,6 +1120,7 @@ void testApp::drawRenderMode() {
 }
 
 //--------------------------------------------------------------
+/*
 void testApp::audioOut(float * output, int bufferSize, int nChannels){
 
     updateTrackingAge();
@@ -1142,3 +1152,4 @@ void testApp::audioOut(float * output, int bufferSize, int nChannels){
 	}
 
 }
+*/

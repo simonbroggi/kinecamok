@@ -8,7 +8,7 @@
 #include "LineArt.h"
 
 #include "faceReceiver.h"
-#include "soundsynt.h"
+//#include "soundsynt.h"
 
 class testApp : public ofBaseApp {
 
@@ -28,8 +28,8 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 
-	soundsynt *synt;
-	void audioOut(float * input, int bufferSize, int nChannels);
+	//soundsynt *synt;
+	//void audioOut(float * input, int bufferSize, int nChannels);
 
 	void setupControlPanel();
 	void setupMesh();

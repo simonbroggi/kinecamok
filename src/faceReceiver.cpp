@@ -13,6 +13,23 @@
 #define CHAR2SINGLE(charArr,i) (unsigned char) charArr[i] | ((unsigned char) charArr[i+1] << 8) | ((unsigned char) charArr[i+2] << 16) | ((unsigned char) charArr[i+3] << 24)
 
 faceReceiver::faceReceiver(){
+    bufferSize = 1468;
+    //char buffer[bufferSize]{};
+    //cout<<"just init"<<endl;
+    buffer = new char[bufferSize];
+    //std::string buffer(bufferSize, 0);
+    //http://stackoverflow.com/questions/3134458/how-to-initialize-a-char-array
+    memset(reinterpret_cast<void*>(buffer), 0, bufferSize);
+    //cout<<"oh comon"<<endl;
+    //std::fill(buffer, buffer + bufferSize, 0);
+    //cout<<"whatsup"<<endl;
+    /*
+    for(int i=0; i<bufferSize; i++){
+        buffer[i] = '0';
+        cout<<i<<",";
+    }
+    cout<<endl;
+    */
 
     //create the socket and bind to port 11001
 	udpConnection.Create();
@@ -42,13 +59,16 @@ bool faceReceiver::update(vector<ofVec3f>& verts){
     return false;
 }
 */
-bool faceReceiver::update(vector<ofVec3f>& verts){
-    int inArrayLen = 1468;
-    //udpConnection.SetReceiveBufferSize(inArrayLen); //what's the point?
-    char udpMessage[inArrayLen]; //probably this causes an error sometimes...
-    udpConnection.Receive(udpMessage,inArrayLen);
 
-    string tmpMessage=udpMessage;
+
+bool faceReceiver::update(vector<ofVec3f>& verts){
+
+    //udpConnection.SetReceiveBufferSize(bufferSize); //what's the point?
+    //char udpMessage[bufferSize]; //probably this causes an error sometimes...
+
+
+    udpConnection.Receive(buffer,bufferSize);
+    string tmpMessage=buffer;
     unsigned short shouldbe = 1;
 
     //cout<<sizeof(shouldbe)<<endl;
@@ -59,15 +79,14 @@ bool faceReceiver::update(vector<ofVec3f>& verts){
         //sizes of the protocoll
         int header = 10;
         int faceHeader = 6;
-
-        unsigned long tick = CHAR2UINT64(udpMessage,0);
-        unsigned short numFaces = CHAR2UINT16(udpMessage,8);
+        unsigned long tick = CHAR2UINT64(buffer,0);
+        unsigned short numFaces = CHAR2UINT16(buffer,8);
 
 
         int faceHeaderIndex = header; //since only one face is supported this is easy
 
-        unsigned short faceID = CHAR2UINT16(udpMessage, faceHeaderIndex);
-        int numFacePoints = CHAR2INT32(udpMessage, faceHeaderIndex+2);
+        unsigned short faceID = CHAR2UINT16(buffer, faceHeaderIndex);
+        int numFacePoints = CHAR2INT32(buffer, faceHeaderIndex+2);
         //cout<<tick<<" "<<numFaces<<" "<<faceID<<" has "<<numFacePoints<<" points"<<endl;
         int facePointsIndex = faceHeaderIndex + faceHeader;
 
@@ -83,9 +102,9 @@ bool faceReceiver::update(vector<ofVec3f>& verts){
                 verts[i].z = 0;
             }
             else{
-                memcpy(&verts[i].x, &udpMessage[facePointsIndex + i*4*3],     4);
-                memcpy(&verts[i].y, &udpMessage[facePointsIndex + i*4*3 + 4], 4);
-                memcpy(&verts[i].z, &udpMessage[facePointsIndex + i*4*3 + 8], 4);
+                memcpy(&verts[i].x, &buffer[facePointsIndex + i*4*3],     4);
+                memcpy(&verts[i].y, &buffer[facePointsIndex + i*4*3 + 4], 4);
+                memcpy(&verts[i].z, &buffer[facePointsIndex + i*4*3 + 8], 4);
 
                 //cout<<"("<<verts[i].x<<", "<<verts[i].y<<", "<<verts[i].z<<")";
 
