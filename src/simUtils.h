@@ -2,5 +2,5 @@
 
 class simUtils{
     public:
-        void multiplyVignette();
+        void multiplyVignette(float sx, float sy);
 };

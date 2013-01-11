@@ -44,7 +44,6 @@ public:
 	void drawSelectionMode();
 	void drawRenderMode();
 	void render();
-	void multiplyLightConeFalloff();
 	void saveCalibration();
 	void preSwitchToRenderMode();
 

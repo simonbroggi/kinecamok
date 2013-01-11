@@ -142,7 +142,7 @@ void testApp::draw() {
 		drawRenderMode();
 	}
 	if(getb("multiplyGradient")) {
-        multiplyLightConeFalloff();
+        utils.multiplyVignette(getf("gradientScaleX"), getf("gradientScaleY"));
 	}
 
 
@@ -1050,24 +1050,6 @@ void testApp::drawSelectionMode() {
 		}
 	}
 
-}
-
-void testApp::multiplyLightConeFalloff(){
-    ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-    //ofBackground(ofColor::black);
-    ofPushMatrix();
-    //float scale = getf("gradientScale");
-    float halfW = ofGetWidth()/2.0;
-    float halfH = ofGetHeight()/2.0;
-    ofTranslate(halfW, halfH, 0);
-    ofScale(getf("gradientScaleX"), getf("gradientScaleY"), 1);
-    ofTranslate(-halfW, -halfH, 0);
-
-    utils.multiplyVignette();
-
-    //ofBackgroundGradient(ofColor::white,ofColor::black, OF_GRADIENT_CIRCULAR);
-    ofPopMatrix();
-    ofDisableBlendMode();
 }
 
 void testApp::drawRenderMode() {

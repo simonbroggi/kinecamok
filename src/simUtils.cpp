@@ -1,9 +1,19 @@
 #include "simUtils.h"
 
-void simUtils::multiplyVignette(){
-
+void simUtils::multiplyVignette(float sx, float sy){
     float w = ofGetWidth(), h = ofGetHeight();
 
+    ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    //ofBackground(ofColor::black);
+    ofPushMatrix();
+    //float scale = getf("gradientScale");
+    float halfW = w/2.0;
+    float halfH = h/2.0;
+    ofTranslate(halfW, halfH, 0);
+    ofScale(sx, sy, 1);
+    ofTranslate(-halfW, -halfH, 0);
+
+    //mesh construction similar to that from ofBackgroundGradient(ofColor::white,ofColor::black, OF_GRADIENT_CIRCULAR);
     ofVec2f center(w / 2, h / 2);
     int n = 24; // circular gradient resolution
     float angleBisector = TWO_PI / (n * 2);
@@ -49,5 +59,8 @@ void simUtils::multiplyVignette(){
     mesh2.draw();
     mesh3.draw();
     glDepthMask(true);
+
+    ofPopMatrix();
+    ofDisableBlendMode();
 
 }
