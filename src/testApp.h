@@ -9,6 +9,7 @@
 
 #include "faceReceiver.h"
 //#include "soundsynt.h"
+#include "simUtils.h"
 
 class testApp : public ofBaseApp {
 
@@ -68,6 +69,8 @@ public:
 	vector<cv::Point3f> objectPoints;
 	vector<cv::Point2f> imagePoints;
 	//vector<bool> referencePoints;
+
+	simUtils utils;
 
 	cv::Mat rvec, tvec;
 	ofMatrix4x4 modelMatrix;

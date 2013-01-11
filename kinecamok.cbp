@@ -51,6 +51,12 @@
 		<Unit filename="src/soundsynt.h">
 			<Option virtualFolder="src/" />
 		</Unit>
+		<Unit filename="src/simUtils.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/simUtils.h">
+			<Option virtualFolder="src/" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

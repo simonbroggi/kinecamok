@@ -75,7 +75,6 @@ bool faceReceiver::update(vector<ofVec3f>& verts){
 
     if(tmpMessage!=""){
         //cout<<endl<< sizeof(udpMessage)/sizeof(udpMessage[0]) <<"message:"<<endl<<tmpMessage<<endl;
-
         //sizes of the protocoll
         int header = 10;
         int faceHeader = 6;

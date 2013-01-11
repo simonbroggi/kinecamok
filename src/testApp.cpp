@@ -910,8 +910,8 @@ void testApp::setupControlPanel() {
 	panel.addSlider("backgroundColorR", 110, 0, 255, true);
 	panel.addSlider("backgroundColorG", 85, 0, 255, true);
 	panel.addSlider("backgroundColorB", 75, 0, 255, true);
-	panel.addSlider("gradientScaleX", 1, .1, 2);
-	panel.addSlider("gradientScaleY", 1, .1, 2);
+	panel.addSlider("gradientScaleX", 0.57, .1, 2);
+	panel.addSlider("gradientScaleY", 0.43, .1, 2);
 	panel.addToggle("multiplyGradient", false);
 	panel.addMultiToggle("drawMode", 5, variadic("faces")("fullWireframe")("outlineWireframe")("occludedWireframe")("pointCloud")("noseOnly"));
 	panel.addMultiToggle("shading", 0, variadic("none")("lights")("shader"));
@@ -1063,7 +1063,9 @@ void testApp::multiplyLightConeFalloff(){
     ofScale(getf("gradientScaleX"), getf("gradientScaleY"), 1);
     ofTranslate(-halfW, -halfH, 0);
 
-    ofBackgroundGradient(ofColor::white,ofColor::black, OF_GRADIENT_CIRCULAR);
+    utils.multiplyVignette();
+
+    //ofBackgroundGradient(ofColor::white,ofColor::black, OF_GRADIENT_CIRCULAR);
     ofPopMatrix();
     ofDisableBlendMode();
 }

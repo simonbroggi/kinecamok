@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Release" />
+	<ActiveTarget name="Debug" />
 	<File name="src/faceReceiver.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="1868" topLine="0" />
+		<Cursor position="2847" topLine="67" />
 	</File>
 	<File name="src/faceReceiver.h" open="1" top="0" tabpos="4">
-		<Cursor position="233" topLine="0" />
+		<Cursor position="408" topLine="0" />
 	</File>
 	<File name="src/main.cpp" open="1" top="0" tabpos="7">
 		<Cursor position="358" topLine="0" />
 	</File>
 	<File name="src/soundsynt.cpp" open="1" top="0" tabpos="6">
-		<Cursor position="431" topLine="6" />
+		<Cursor position="431" topLine="9" />
 	</File>
 	<File name="src/soundsynt.h" open="1" top="0" tabpos="5">
 		<Cursor position="179" topLine="0" />
 	</File>
-	<File name="src/testApp.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="34806" topLine="246" />
+	<File name="src/testApp.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="46895" topLine="0" />
 	</File>
-	<File name="src/testApp.h" open="1" top="0" tabpos="2">
-		<Cursor position="915" topLine="0" />
+	<File name="src/testApp.h" open="1" top="1" tabpos="2">
+		<Cursor position="200" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>
